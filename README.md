@@ -4,7 +4,7 @@
 
 两个产物同源于一个 `content.json`，所以幻灯片上写的和嘴里讲的不会打架。版式和设计参数是从一份真实的组会汇报稿逐形状量出来的实测值，不是凭感觉设的。
 
-不依赖任何特定 AI 平台 —— 底下就是几个普通 Python 脚本，Claude、GPT、Cursor、或者你本人手动，用法完全一样。
+不依赖任何特定 AI 平台 —— 底下就是几个普通 Python 脚本，有 shell 能跑 python 的地方就能用。
 
 ---
 
@@ -120,14 +120,19 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 
 **A. 当 AI skill 用（推荐）** —— 把整个目录放进 agent 的 skills 目录：
 
-| 平台 | 放哪 |
-|---|---|
-| DSH | `~/.dsh/skills/lit-report-ppt/` |
-| Claude Code / Claude Desktop | 对应 skills 目录，或直接把 `SKILL.md` 的内容贴进对话 |
-| GPT / ChatGPT | 把 `SKILL.md` 贴进自定义 GPT 的 instructions，或直接对话时喂给它 |
-| Cursor / Cline 等 | 同上，放进 rules 或 project instructions |
+| 平台 | 放哪 | 能跑脚本吗 |
+|---|---|---|
+| DSH | `~/.dsh/skills/lit-report-ppt/` | ✅ |
+| Claude Code / Codex CLI / Cursor | 对应 skills / rules 目录 | ✅ |
+| ChatGPT（自定义 GPT） | 把 `SKILL.md` 贴进 instructions | ❌ 见下 |
 
-`SKILL.md` 里写了什么时候该用它、四步走、以及**最容易错的四件事**。
+⚠️ **「通用」有个前提：那个平台得能执行本地的 Python 代码。**
+
+脚本是普通 Python，跟平台无关 —— 只要有 shell 能跑 `python scripts/build_deck.py`，在哪儿都一样。
+
+但网页版 ChatGPT 这类**没有代码执行能力**的，只能用它来写 `content.json` 里的文案和图注（那是判断活，它做得不错），最后一步出稿得在本机上跑。别指望在对话窗口里直接吐出 `.pptx` 文件。
+
+`SKILL.md` 里写了什么时候该用它、四步走、以及**最容易错的四件事** —— 这段给任何模型看都有用，因为它讲的是内容判断，不是 API。
 
 **B. 纯手动用** —— 不接 AI 也行，就是跑上面那四条命令。模板和校徽按脚本所在位置解析（`__file__`），**跟当前工作目录无关**，在哪个目录跑都一样。
 
