@@ -155,13 +155,14 @@ python scripts/build_deck.py content.json -o out/deck.pptx --presenter "张三" 
 
 ---
 
-## 最容易错的五件事
+## 最容易错的六件事
 
 1. **图注偷懒**。写「如图所示」、只写标题不写子图、图注 40 字打发 —— 全部会被 `check_deck.py` 报。图注是听众唯一能回去查的东西。
 2. **把三件事塞一页**。宁可多开一页。用户原话：「你太强迫症了，如果不够放就再多开一页呗」。图注放不下会自动续页，**续页上必须有完整的「图 + 注」**，不能只剩注。
 3. **用 Unicode 上下标**。`Cr³⁺` 换字体就散，复制到论文里变乱码。必须写 `Cr^{3+}` 让脚本转真上下标。
 4. **加了样本里没有的东西**。提炼条、橙色 callout、页码、手画下划线 —— 原稿没有的全不加。用户说过「样本外元素全删，严格照样本」。要加先问。
 5. **裁图没看图就交**。顶部红标题残条、底部图注碎字、轴标签被切半个字 —— 这三种都躲得过 `check_deck.py`（它只看形状，不看图里有什么），只能靠眼睛。详见上面「裁图踩过的坑」。
+6. **默认校徽校名给了别人**。封面顶栏是**南阳师范学院物理与电子工程学院**，校徽 `assets/logo.png` 和两行校名（`scripts/build_deck.py:53` 与 `:58`）都是硬编码。用的人不是这个学校时**三处都得换**，只换 logo 会让封面顶着别人的校名，很尴尬。开做之前先问一句「你是哪个学校/学院的」；用户不打算换就别擅自改。
 
 ---
 
@@ -188,7 +189,7 @@ references/page-skeleton.md     七种页型的字段结构与写法
 references/script-guide.md      讲稿写作规范
 references/copywriting.md       文案口径：什么话能说、什么话不能说
 assets/template.pptx            空模板（母版+13个版式，无页面）
-assets/logo.png                 校徽
+assets/logo.png                 校徽（默认南阳师范学院，自用须换）
 assets/content.template.json    content.json 全字段样板
 scripts/lr_common.py            设计常量 + 排版原语（改参数改这里）
 scripts/extract_paper.py        抽文本与图注
