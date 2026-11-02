@@ -69,6 +69,24 @@ python scripts/build_deck.py content.json -o out/deck.pptx --presenter "张三" 
 python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "张三" --date "2026年11月2日"
 ```
 
+### 改成你自己的学校（自用必看）
+
+仓库里的封面默认是**南阳师范学院物理与电子工程学院**，校徽和两行校名都是**写死在代码里的**，不是 `content.json` 的字段。**只换 `assets/logo.png` 不够** —— 不换校名，封面上照样顶着「Nanyang Normal University」。
+
+三处都要改，一共就三行的事：
+
+| 改什么 | 位置 |
+|---|---|
+| 校徽图片 | 直接覆盖 `assets/logo.png`（建议 1:1 正方形，白色或透明底，≥300×300） |
+| 第一行校名 | `scripts/build_deck.py:53` 的 `"Nanyang Normal University"` |
+| 第二行院系 | `scripts/build_deck.py:58` 的 `"College of Physics and Electronic Engineering"` |
+
+两行都在 `_top_bar()` 里，改完重跑 `build_deck.py` 即可，`check_deck.py` 不用跟着改。
+
+封面和致谢页各有一份顶栏，但它们是同一个函数画的，**改一处就够了**。
+
+字号是照着「18pt 粗 + 14pt 斜体」这个组合配的：新校名比这长就把 `18` 往下调到 16，别让它顶到右边。真觉得别扭，把这两行喂给 AI 让它改也行。
+
 ---
 
 ## 页序（固定）
@@ -132,7 +150,7 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 
 但网页版 ChatGPT 这类**没有代码执行能力**的，只能用它来写 `content.json` 里的文案和图注（那是判断活，它做得不错），最后一步出稿得在本机上跑。别指望在对话窗口里直接吐出 `.pptx` 文件。
 
-`SKILL.md` 里写了什么时候该用它、四步走、**最容易错的五件事**、以及一节「裁图踩过的坑」 —— 这段给任何模型看都有用，因为它讲的是内容判断，不是 API。
+`SKILL.md` 里写了什么时候该用它、四步走、**最容易错的六件事**、以及一节「裁图踩过的坑」 —— 这段给任何模型看都有用，因为它讲的是内容判断，不是 API。
 
 **B. 纯手动用** —— 不接 AI 也行，就是跑上面那四条命令。模板和校徽按脚本所在位置解析（`__file__`），**跟当前工作目录无关**，在哪个目录跑都一样。
 
@@ -141,14 +159,14 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 ## 目录
 
 ```
-SKILL.md                        主入口：什么时候用、四步走、最容易错的五件事、裁图踩过的坑
+SKILL.md                        主入口：什么时候用、四步走、最容易错的六件事、裁图踩过的坑
 requirements.txt                python 依赖
 references/style-tokens.md      几何 / 字号 / 颜色 / 图注容量（硬参数，改前先问）
 references/page-skeleton.md     七种页型的字段结构与写法
 references/script-guide.md      讲稿写作规范
 references/copywriting.md       文案口径：什么话能说、什么话不能说
 assets/template.pptx            空模板（母版 + 10 个版式，无页面）
-assets/logo.png                 校徽
+assets/logo.png                 校徽（默认南阳师范学院，自用换成自己的）
 assets/content.template.json    content.json 全字段样板
 scripts/lr_common.py            设计常量 + 排版原语（改参数改这里）
 scripts/extract_paper.py        抽正文与图注
