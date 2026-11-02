@@ -62,6 +62,27 @@ def _top_bar(slide, logo=True):
 
 
 # ------------------------------------------------------------------ 封面
+def _tag_text(slide, text, y=None, x=None, h=None):
+    """左上角的章节标签文字。**没有框**，就是竖排的一行正文字。
+
+    原来这里是「蓝色虚线框 + 13pt 粗 主蓝竖排字」。用户 2026-11-02 说
+    「框去一下，不需要了」，随后补一句「框删了之后里面的字不要删，
+    同时给他从小蓝字变为和正文同字体」，再反问「原来的框不是竖着的吗」——
+    意思很清楚：框去掉，字留着，还竖着，只是换成正文字（楷体 11pt 正文色）。
+    """
+    if not text:
+        return
+    x = L.TAG_X if x is None else x
+    y = L.TAG_Y if y is None else y
+    h = L.TAG_H if h is None else h
+    box, tf = L.textbox(slide, x, y, L.TAG_W, h, anchor=MSO_ANCHOR.TOP,
+                        margins=(0.0, 0.0, 0.0, 0.0))
+    # 竖排：东亚竖排从上往下读
+    tf._txBody.bodyPr.set("vert", "eaVert")
+    L.write_box(tf, text, L.C1, color=L.BODY, align=PP_ALIGN.CENTER,
+                line_spacing=1.10, space_after=0)
+
+
 def build_cover(prs, meta):
     slide = prs.slides.add_slide(prs.slide_layouts[L.LAYOUT_TITLE_CONTENT])
     L.clear_slide(slide)
@@ -149,6 +170,7 @@ def build_paper_home(prs, spec, base_dir):
 def build_summary(prs, spec):
     slide = prs.slides.add_slide(prs.slide_layouts[L.LAYOUT_BLANK])
     _bg(slide, None)
+    _tag_text(slide, spec.get("tag"))
 
     box, tf = L.textbox(slide, 0.95, 0.26, 11.90, 0.48)
     L.write_box(tf, spec.get("heading", "摘要说了什么"), L.H1, bold=True, color=L.INK)
@@ -287,6 +309,7 @@ def _looks_numeric(v) -> bool:
 def build_text(prs, spec):
     slide = prs.slides.add_slide(prs.slide_layouts[L.LAYOUT_BLANK])
     _bg(slide, None)
+    _tag_text(slide, spec.get("tag"))
 
     box, tf = L.textbox(slide, 0.95, 0.26, 11.90, 0.48)
     L.write_box(tf, spec.get("heading", "合成方法"), L.H1, bold=True, color=L.INK)
@@ -348,9 +371,12 @@ def build_figure(prs, spec, base_dir, page_no):
     if mode == "A":
         ix, iy, iw, ih = L.FIG_A_IMG
         cx, cy, cw, ch = L.FIG_A_CAP
+        # A 排法图从 x=0.61 起，左边塞不下竖排标签，样本上这种页也没有标签
     else:
         ix, iy, iw, ih = L.FIG_B_IMG
         cx, cy, cw, ch = L.FIG_B_CAP
+        # B 排法图从 1.35 起，左边 0.30 起有一整条空档，标签就竖在这儿
+        _tag_text(slide, spec.get("tag"))
 
     img = spec.get("image")
     path = _resolve(img, base_dir) if img else ""
