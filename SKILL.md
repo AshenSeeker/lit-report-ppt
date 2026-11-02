@@ -6,7 +6,7 @@ description: Turn one journal paper into a Chinese group-meeting literature repo
 description_zh: 把一篇期刊论文做成组会文献汇报 PPT（南阳师院物电学院模板）+ 配套 Word 讲稿。用户提到文献汇报、组会汇报、journal club、把这篇 PDF 做成 PPT 时使用。
 description_en: Build a group-meeting literature report deck and speaker script from a journal PDF.
 category: writing
-version: 1.1.0
+version: 1.1.1
 ---
 
 # 文献汇报 PPT
