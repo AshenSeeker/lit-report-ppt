@@ -40,23 +40,22 @@
 | ![05 结论](examples/05-conclusion.jpg) | |
 | 结论页：四条并列 | |
 
-**Word 讲稿（全文 5 页，全放）**
-
-讲稿按页写，一页 PPT 一段话，末尾带各页目标秒数与合计。它和 PPT 同源于一个 `content.json`，所以不会讲串。
-
-![讲稿 P1](examples/script-01.jpg)
-
-![讲稿 P2](examples/script-02.jpg)
-
-![讲稿 P3](examples/script-03.jpg)
-
-![讲稿 P4](examples/script-04.jpg)
-
-![讲稿 P5](examples/script-05.jpg)
-
 **源文件也给了**：`examples/示例.pptx`（13 页）和 `examples/示例讲稿.docx`（5 页）就是上面截图的那两份，直接打开能改文字、换图、调版式，不用从零跑一遍脚本。想按自己的论文重做一份，还是走下面「用」的四步。
 
 > 图里的人名是 `XX`、时间是 `2026年11月11日`，都是 `--presenter` / `--date` 传进去的占位值，跑一遍换成自己的即可。校徽和校名是默认值，自用要换（见「改成你自己的学校」）。论文图来自 Wiley 期刊，这里只作版式示例。
+
+**Word 讲稿（全文 5 页，缩到和上面 PPT 截图一样大）**
+
+讲稿按页写，一页 PPT 一段话，末尾带各页目标秒数与合计。它和 PPT 同源于一个 `content.json`，所以不会讲串。五页全留，但缩成两列缩略图放在这一节末尾，点开看大图 —— 竖页直接铺开一张占一屏，太占地方。
+
+| | |
+|---|---|
+| <img src="examples/script-01.jpg" width="300"> | <img src="examples/script-02.jpg" width="300"> |
+| 讲稿 P1 | 讲稿 P2 |
+| <img src="examples/script-03.jpg" width="300"> | <img src="examples/script-04.jpg" width="300"> |
+| 讲稿 P3 | 讲稿 P4 |
+| <img src="examples/script-05.jpg" width="300"> | |
+| 讲稿 P5 | |
 
 ---
 
@@ -68,7 +67,9 @@ pip install -r requirements.txt
 
 就这四个依赖：`python-pptx`、`python-docx`、`Pillow`、`pymupdf`（`pypdf` 兜底）。
 
-不需要 `git`、不需要 Node、不需要 Office。
+手动用这一套**不需要 `git`、不需要 Node、不需要 Office**。
+
+> 如果你是 DSH 用户、想从插件市场装（`dsh plugin add wld12314/lit-report-ppt`）：仓库里多带了一个 `package.json` + `cordis.patch.yml` + `lib/index.js`，那是给 DSH 宿主注册这个 skill 用的登记表，跑在宿主侧、需要 Node 22+。**它不碰出稿脚本** —— 出稿还是上面那四个 Python 依赖，跟手动装法一模一样。
 
 ---
 
@@ -196,6 +197,9 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 ```
 SKILL.md                        主入口：什么时候用、四步走、最容易错的六件事、裁图踩过的坑
 examples/                       成品示例：5 张 PPT 页 + 讲稿 5 页截图，以及可直接改的 .pptx / .docx
+package.json                    DSH 插件市场登记表（声明 dsh.bundle）
+cordis.patch.yml                bundle 补丁：注册 skill provider
+lib/index.js                    provider 本体：读 SKILL.md 注册进宿主（需 Node 22+，不碰出稿脚本）
 requirements.txt                python 依赖
 references/style-tokens.md      几何 / 字号 / 颜色 / 图注容量（硬参数，改前先问）
 references/page-skeleton.md     七种页型的字段结构与写法

@@ -1,0 +1,55 @@
+{
+  "name": "lit-report-ppt",
+  "version": "1.4.0",
+  "description": "DeepSeek Harness skill that turns one journal paper PDF into a Chinese group-meeting literature report deck (.pptx) plus a matching Word speaker script, keeping the paper's own cropped figures and full captions.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "SKILL.md",
+    "references",
+    "scripts",
+    "assets",
+    "examples",
+    "requirements.txt",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "dsh": ">=0.2.0-rc.2 <0.3.0-0",
+    "node": ">=22"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "dsh",
+    "deepseek-harness",
+    "skill",
+    "pptx",
+    "powerpoint",
+    "slides",
+    "paper",
+    "pdf",
+    "literature-report",
+    "journal-club"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wld12314/lit-report-ppt.git"
+  },
+  "homepage": "https://github.com/wld12314/lit-report-ppt#readme",
+  "bugs": {
+    "url": "https://github.com/wld12314/lit-report-ppt/issues"
+  }
+}
