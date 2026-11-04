@@ -54,7 +54,9 @@
 
 ![讲稿 P5](examples/script-05.jpg)
 
-> 图里的人名是 `XX`、时间是 `2026年11月11日`，都是 `--presenter` / `--date` 传进去的占位值，跑一遍换成自己的即可。论文图来自 Wiley 期刊，这里只作版式示例。
+**源文件也给了**：`examples/示例.pptx`（13 页）和 `examples/示例讲稿.docx`（5 页）就是上面截图的那两份，直接打开能改文字、换图、调版式，不用从零跑一遍脚本。想按自己的论文重做一份，还是走下面「用」的四步。
+
+> 图里的人名是 `XX`、时间是 `2026年11月11日`，都是 `--presenter` / `--date` 传进去的占位值，跑一遍换成自己的即可。校徽和校名是默认值，自用要换（见「改成你自己的学校」）。论文图来自 Wiley 期刊，这里只作版式示例。
 
 ---
 
@@ -193,6 +195,7 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 
 ```
 SKILL.md                        主入口：什么时候用、四步走、最容易错的六件事、裁图踩过的坑
+examples/                       成品示例：5 张 PPT 页 + 讲稿 5 页截图，以及可直接改的 .pptx / .docx
 requirements.txt                python 依赖
 references/style-tokens.md      几何 / 字号 / 颜色 / 图注容量（硬参数，改前先问）
 references/page-skeleton.md     七种页型的字段结构与写法
