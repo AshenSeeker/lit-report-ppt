@@ -46,10 +46,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wld12314/lit-report-ppt.git"
+    "url": "git+https://github.com/AshenSeeker/lit-report-ppt.git"
   },
-  "homepage": "https://github.com/wld12314/lit-report-ppt#readme",
+  "homepage": "https://github.com/AshenSeeker/lit-report-ppt#readme",
   "bugs": {
-    "url": "https://github.com/wld12314/lit-report-ppt/issues"
+    "url": "https://github.com/AshenSeeker/lit-report-ppt/issues"
   }
 }

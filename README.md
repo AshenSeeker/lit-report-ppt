@@ -69,7 +69,7 @@ pip install -r requirements.txt
 
 手动用这一套**不需要 `git`、不需要 Node、不需要 Office**。
 
-> 如果你是 DSH 用户、想从插件市场装（`dsh plugin add wld12314/lit-report-ppt`）：仓库里多带了一个 `package.json` + `cordis.patch.yml` + `lib/index.js`，那是给 DSH 宿主注册这个 skill 用的登记表，跑在宿主侧、需要 Node 22+。**它不碰出稿脚本** —— 出稿还是上面那四个 Python 依赖，跟手动装法一模一样。
+> 如果你是 DSH 用户、想从插件市场装（`dsh plugin add AshenSeeker/lit-report-ppt`）：仓库里多带了一个 `package.json` + `cordis.patch.yml` + `lib/index.js`，那是给 DSH 宿主注册这个 skill 用的登记表，跑在宿主侧、需要 Node 22+。**它不碰出稿脚本** —— 出稿还是上面那四个 Python 依赖，跟手动装法一模一样。
 
 ---
 
