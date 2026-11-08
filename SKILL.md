@@ -2,16 +2,22 @@
 name: lit-report-ppt
 display_name: 文献汇报 PPT
 display_name_en: Literature Report Deck
-description: Turn one journal paper into a Chinese group-meeting literature report deck (.pptx) in the Nanyang Normal University physics template, plus a matching Word speaker script. Use when the user asks for a 文献汇报 / 文献报告 / 组会汇报 / journal club deck from a PDF, or hands over a paper and wants slides plus 讲稿.
-description_zh: 把一篇期刊论文做成组会文献汇报 PPT（南阳师院物电学院模板）+ 配套 Word 讲稿。用户提到文献汇报、组会汇报、journal club、把这篇 PDF 做成 PPT 时使用。
-description_en: Build a group-meeting literature report deck and speaker script from a journal PDF.
+description: Turn one journal paper PDF into three deliverables by default — a Chinese group-meeting literature report deck (.pptx) in the Nanyang Normal University physics template, a matching Word speaker script, and a two-colour defence-prediction Q&A HTML. Use when the user asks for a 文献汇报 / 文献报告 / 组会汇报 / journal club deck from a PDF, or hands over a paper and wants slides plus 讲稿.
+description_zh: 把一篇期刊论文默认做成三份产物：组会文献汇报 PPT（南阳师院物电学院模板）、配套 Word 讲稿、双色答辩预测问答 HTML。用户提到文献汇报、组会汇报、journal club、把这篇 PDF 做成 PPT 时使用 —— 走这里就是三份一起出。
+description_en: Build a group-meeting literature report deck, a speaker script, and a two-colour defence-prediction Q&A HTML from one journal PDF — three deliverables by default.
 category: writing
-version: 1.5.0
+version: 1.5.1
 ---
 
 # 文献汇报 PPT
 
-把一篇 PDF 论文做成能上台念的汇报稿。**两个主产物**：一份 PPT，一份对着每页讲的 Word 讲稿，都从同一个 `content.json` 出。**另有一个可选产物**：答辩预测问答双色 HTML（`qa.json` → `build_qa.py`），见下面「答辩预测问答」。
+把一篇 PDF 论文做成能上台念的汇报稿。**一篇论文进，三份产物一起出**（默认，不用用户单独点名）：
+
+1. **PPT** —— 上台放的幻灯片，从 `content.json` 出。
+2. **Word 讲稿** —— 对着每页念的稿子，同源于 `content.json`，所以和 PPT 不会打架。
+3. **答辩预测问答双色 HTML** —— 问题蓝、答案绿的答辩预演表，从 `qa.json` 出（`build_qa.py`），见下面「答辩预测问答」。
+
+三份都不是可选的：走这个 skill 就三份一起交。前两份共一份 `content.json`，第三份另用一份 `qa.json`，但材料都是这同一篇论文。
 
 这套模板量自一份真实的组会汇报稿（28 页），不是凭空设计的。所有几何、字号、颜色都在 `references/style-tokens.md` 里，**别凭感觉改**。
 
@@ -24,6 +30,8 @@ version: 1.5.0
 - 「文献汇报」「journal club」「读书报告」+ 一个 PDF
 - 给了论文，问「怎么做成汇报」
 
+**默认就出三份**（PPT + Word 讲稿 + 双色答辩预测问答 HTML），不用用户额外说「要那个双色版」，也别只交前两份就收工。除非用户明确说「这次不要问答」，否则第三份必须一起生成。
+
 ---
 
 ## 四步走
@@ -31,11 +39,12 @@ version: 1.5.0
 ```
 1. 抽 → python scripts/extract_paper.py paper.pdf -o work/
 2. 裁 → python scripts/crop_figures.py paper.pdf --crop "3,0.08,0.065,0.93,0.448" -o work/figs/
-3. 写 → 填 content.json（内容全在这儿，脚本不替你写内容）
-4. 出 → build_deck.py → check_deck.py → build_script.py
+3. 写 → 填 content.json（PPT 与讲稿的内容，脚本不替你写）
+        填 qa.json（答辩预测问答，复制 assets/qa.template.json 改）
+4. 出 → build_deck.py → check_deck.py → build_script.py → build_qa.py
 ```
 
-**别跳步。** 特别是第 3 步 —— 内容是判断活，不是搬运活。
+**别跳步，也别漏产物。** 第 3 步要写**两份**内容文件（`content.json` 和 `qa.json`），第 4 步要出**三份**产物（PPT、讲稿、问答 HTML）。特别是内容 —— 都是判断活，不是搬运活。三份一起交，少一份不算完。
 
 ### 1. 抽论文
 
@@ -182,28 +191,29 @@ python scripts/build_deck.py content.json -o out/deck.pptx --presenter "张三" 
 
 ---
 
-## 答辩预测问答（可选第三产物）
+## 答辩预测问答（默认第三产物，必出）
 
-除了 PPT 和讲稿，还能再出一份**答辩预测问题与答案**，形态是一份双色 HTML：问题蓝、答案绿，表格整齐。用户要「双色版」时走这里。
+**这是默认要交的第三份产物，不用用户单独点名。** 形态是一份双色 HTML：问题蓝、答案绿，表格整齐，十题左右，每题都配一句直接答案。走这个 skill 就一起出，别只交前两份。
 
 **它和前面两个产物是同一套论文材料**，只是多了一份 `qa.json` 和一步渲染：
 
 ```bash
 # 1. 写 qa.json（复制 assets/qa.template.json 改）
 #    ↑ 和 content.json 一样，这是判断活，脚本不替你写内容
-# 2. 出稿
+# 2. 出稿（和 build_deck.py / build_script.py 同一轮跑完）
 python scripts/build_qa.py qa.json -o out/答辩预测问题.html
 ```
 
 `build_qa.py` **只管排版**，CSS 是照着一份真实成品逐字抄下来的（`--q:#1d4ed8` / `--a:#15803d`、`.wrap max-width:1020px`、`col.q 43%`、斑马纹），**别凭感觉改颜色或间距** —— 改一处就和 `examples/答辩预测问题.html` 对不上。`qa.json` 里写 `^{3+}` / `_{2}`，脚本转成真的 `<sup>` / `<sub>`。
 
-### 五条硬要求（照抄，别自己发挥）
+### 六条硬要求（照抄，别自己发挥）
 
-1. **只要「问题 + 直接答案」两栏。** 不要「考察点」「为什么问」「应答解析」「参考思路」等任何附加内容 —— 用户明确点名不要。
-2. **答案 ≤30 字**（化学式、符号、字母不计）。言简意赅，直接给结论，不铺陈。`build_qa.py` 会数汉字数，超了给警告但不阻断，自己回头删。
-3. **问题与答案不同颜色** —— 这正是用 HTML 而不是纯 txt 的原因。颜色脚本固定，不用你调。
-4. **排版整齐**：表格、对齐、上下角标用 `^{}` / `_{}`（别直接粘 Unicode 上下标，换环境会散）。
-5. **提问方向必须覆盖这三类**：① 为什么选这个体系（基质、掺杂离子、合成路线为什么这么定）② 国内外这个方向哪里做得多（点名课题组/地区，别泛泛说「研究很多」）③ 能否换成别的材料、替换后性质怎么变（引申出对比）。
+1. **十题左右，每题都有答案。** 做 10–12 题，问题栏和答案栏一一对应，不许只列问题不给答案。
+2. **问题与答案不同颜色。** 问题蓝、答案绿 —— 这正是用 HTML 而不是纯 txt 的原因。颜色脚本固定，不用你调。
+3. **要言简意赅，只给「问题 + 直接答案」两栏。** 不要「考察内容」「考察点」「为什么问」「应答解析」「参考思路」等任何附加内容 —— 用户明确点名不要，直接给答案。
+4. **答案 ≤30 字，字母/符号不限。** 只数汉字（`build_qa.py` 的 `cn_count` 就是这个口径），化学式、符号、字母都不计入，所以 `Mo^{3+}`、`4.4 meV` 这类不算字。超了脚本给警告但不阻断，自己回头删。直接给结论，不铺陈。
+5. **提问方向必须覆盖这三类**：① 为什么选这个来做（基质、掺杂离子、合成路线为什么这么定）② 国内外这个方向哪里做得多（点名课题组/地区，别泛泛说「研究很多」）③ 可以换成别的做吗、进而勾出它们的性质（能否替换、替换后性质怎么变，引申出对比）。
+6. **排版要整齐。** 表格、对齐、上下角标用 `^{}` / `_{}`（别直接粘 Unicode 上下标，换环境会散）。样式脚本固定，照着填就行。
 
 ### 内容从哪来
 
