@@ -1,10 +1,10 @@
 # 文献汇报 PPT
 
-**一句话**：给一篇论文 PDF，出一份能上台讲的中文组会汇报 PPT，外加一份对着每页念的 Word 讲稿。
+**一句话**：给一篇论文 PDF，出一份能上台讲的中文组会汇报 PPT，外加一份对着每页念的 Word 讲稿；还可以再出一份双色的答辩预测问题与答案 HTML。
 
-两个产物同源于一个 `content.json`，所以幻灯片上写的和嘴里讲的不会打架。版式和设计参数是从一份真实的组会汇报稿逐形状量出来的实测值，不是凭感觉设的。
+两个主产物同源于一个 `content.json`，所以幻灯片上写的和嘴里讲的不会打架。第三个可选产物（答辩预测问答）另用一份 `qa.json`，同样从这篇论文里来。版式和设计参数是从一份真实的组会汇报稿逐形状量出来的实测值，不是凭感觉设的。
 
-不依赖任何特定 AI 平台 —— 底下就是几个普通 Python 脚本，有 shell 能跑 python 的地方就能用。
+不依赖任何特定 AI 平台 —— 底下就是几个普通 Python 脚本，有 shell 能跑 python 的地方就能用。答辩问答那份是纯 HTML，双击就能在浏览器里看。
 
 ---
 
@@ -22,6 +22,9 @@
 | 化学式上下角标 | 写 `Cr^{3+}`、`Cs_{2}NaInCl_{6}`，脚本转成真上下标 |
 | 元素跑出画面被切 | 逐页扫描出界、重叠、字体缺失、字号越级 |
 | 讲稿像念论文 | 讲稿按「一张图两三句、学术但不堆术语」的口径写 |
+| 答辩被问到答不上来 | 可选再出一份双色问答 HTML：问题蓝、答案绿，每题只给一句 ≤30 字的直接答案 |
+
+答辩预测问答是**第三个可选产物**，和 PPT、讲稿用同一套论文材料，但单独一份 `qa.json`、单独一步渲染，不碰前面两个产物。它只出 HTML（双色表格），不出纯文本。
 
 ---
 
@@ -56,6 +59,14 @@
 | 讲稿 P3 | 讲稿 P4 |
 | <img src="examples/script-05.jpg" width="300"> | |
 | 讲稿 P5 | |
+
+**答辩预测问答（双色 HTML，12 题）**
+
+问题蓝、答案绿，斑马纹表格，每题只给一句 ≤30 字的直接答案，没有考察点、没有解析。双击 `examples/答辩预测问题.html` 就能在浏览器里看，`examples/qa.json` 是可改的源数据。
+
+![答辩预测问答双色 HTML 预览](examples/答辩预测问题.png)
+
+> 这份 HTML 的颜色、表格宽度、字号、上下角标和空行都是 `build_qa.py` 照着成品逐字排的，改样式常量就会和它对不上。
 
 ---
 
@@ -95,6 +106,16 @@ python scripts/build_script.py content.json -o out/讲稿.docx
 ```
 
 `check_deck.py` 要跑到 **0 个建议**才算完成。
+
+### 可选：出一份答辩预测问答
+
+复制 `assets/qa.template.json` 改成 `qa.json`，照 `SKILL.md`「答辩预测问答」的五条硬要求填 12 题左右，再渲染：
+
+```bash
+python scripts/build_qa.py qa.json -o out/答辩预测问题.html
+```
+
+这一步和前面四步独立，不要它也照样能出 PPT + 讲稿。双色只在这份 HTML 里，不进 PPT 也不进 Word。
 
 ### 汇报人姓名与时间
 
@@ -186,7 +207,7 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 
 但网页版 ChatGPT 这类**没有代码执行能力**的，只能用它来写 `content.json` 里的文案和图注（那是判断活，它做得不错），最后一步出稿得在本机上跑。别指望在对话窗口里直接吐出 `.pptx` 文件。
 
-`SKILL.md` 里写了什么时候该用它、四步走、**最容易错的六件事**、以及一节「裁图踩过的坑」 —— 这段给任何模型看都有用，因为它讲的是内容判断，不是 API。
+`SKILL.md` 里写了什么时候该用它、四步走、**最容易错的六件事**、一节「裁图踩过的坑」、以及「答辩预测问答」的五条硬要求 —— 这段给任何模型看都有用，因为它讲的是内容判断，不是 API。
 
 **B. 纯手动用** —— 不接 AI 也行，就是跑上面那四条命令。模板和校徽按脚本所在位置解析（`__file__`），**跟当前工作目录无关**，在哪个目录跑都一样。
 
@@ -196,7 +217,7 @@ python scripts/build_script.py content.json -o out/讲稿.docx   --presenter "�
 
 ```
 SKILL.md                        主入口：什么时候用、四步走、最容易错的六件事、裁图踩过的坑
-examples/                       成品示例：5 张 PPT 页 + 讲稿 5 页截图，以及可直接改的 .pptx / .docx
+examples/                       成品示例：PPT / 讲稿截图 + 源文件，以及双色问答 HTML、预览图、qa.json
 package.json                    DSH 插件市场登记表（声明 dsh.bundle）
 cordis.patch.yml                bundle 补丁：注册 skill provider
 lib/index.js                    provider 本体：读 SKILL.md 注册进宿主（需 Node 22+，不碰出稿脚本）
@@ -208,12 +229,14 @@ references/copywriting.md       文案口径：什么话能说、什么话不能
 assets/template.pptx            空模板（母版 + 10 个版式，无页面）
 assets/logo.png                 校徽（默认南阳师范学院，自用换成自己的）
 assets/content.template.json    content.json 全字段样板
+assets/qa.template.json          qa.json 字段样板（答辩预测问答）
 scripts/lr_common.py            设计常量 + 排版原语（改参数改这里）
 scripts/extract_paper.py        抽正文与图注
 scripts/crop_figures.py         裁图
 scripts/build_deck.py           生成 PPT
 scripts/check_deck.py           自检
 scripts/build_script.py         生成 Word 讲稿
+scripts/build_qa.py             生成双色答辩预测问答 HTML
 ```
 
 ---
@@ -235,6 +258,8 @@ scripts/build_script.py         生成 Word 讲稿
 - **讲稿不必和 PPT 逐页一一对齐。** 两页图讲同一件事，合成一段更顺。用 `"p": "7-8"` 指定覆盖的页范围。
 - **左上角竖排标签只留字、不画框。** 外框已删，文字保留并改为楷体 11pt 正文色，竖排方向不变（只出现在 B 排法页，A 排法左边塞不下）。`content.json` 的 `tag` 字段同时给讲稿生成器当页标题兜底。
 - **不主动加原稿没有的元素。** 提炼条、橙色 callout、页码都拿掉了。想加先问。
+- **答辩预测问答只出双色 HTML，不另出纯文本 txt。** 用户要的就是「最后那个双色版」—— 问题蓝、答案绿正是靠 HTML/CSS 才成立，纯文本留不住颜色。脚本里的 CSS 照着成品逐字抄，改一处就和预览图对不上。
+- **问答内容是判断活，脚本不写。** `build_qa.py` 只负责把 `qa.json` 排成表格；问什么、答什么、答案压到 ≤30 字，都得读论文的人（或模型）自己写，和 `content.json` 一个道理。
 
 ---
 

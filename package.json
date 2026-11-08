@@ -1,7 +1,7 @@
 {
   "name": "lit-report-ppt",
-  "version": "1.4.0",
-  "description": "DeepSeek Harness skill that turns one journal paper PDF into a Chinese group-meeting literature report deck (.pptx) plus a matching Word speaker script, keeping the paper's own cropped figures and full captions.",
+  "version": "1.5.0",
+  "description": "DeepSeek Harness skill that turns one journal paper PDF into a Chinese group-meeting literature report deck (.pptx), a matching Word speaker script, and optionally a two-colour Q&A HTML for defence prep, keeping the paper's own cropped figures and full captions.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

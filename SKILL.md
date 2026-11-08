@@ -6,12 +6,12 @@ description: Turn one journal paper into a Chinese group-meeting literature repo
 description_zh: 把一篇期刊论文做成组会文献汇报 PPT（南阳师院物电学院模板）+ 配套 Word 讲稿。用户提到文献汇报、组会汇报、journal club、把这篇 PDF 做成 PPT 时使用。
 description_en: Build a group-meeting literature report deck and speaker script from a journal PDF.
 category: writing
-version: 1.4.0
+version: 1.5.0
 ---
 
 # 文献汇报 PPT
 
-把一篇 PDF 论文做成能上台念的汇报稿。**两个产物**：一份 PPT，一份对着每页讲的 Word 讲稿，都从同一个 `content.json` 出。
+把一篇 PDF 论文做成能上台念的汇报稿。**两个主产物**：一份 PPT，一份对着每页讲的 Word 讲稿，都从同一个 `content.json` 出。**另有一个可选产物**：答辩预测问答双色 HTML（`qa.json` → `build_qa.py`），见下面「答辩预测问答」。
 
 这套模板量自一份真实的组会汇报稿（28 页），不是凭空设计的。所有几何、字号、颜色都在 `references/style-tokens.md` 里，**别凭感觉改**。
 
@@ -182,6 +182,37 @@ python scripts/build_deck.py content.json -o out/deck.pptx --presenter "张三" 
 
 ---
 
+## 答辩预测问答（可选第三产物）
+
+除了 PPT 和讲稿，还能再出一份**答辩预测问题与答案**，形态是一份双色 HTML：问题蓝、答案绿，表格整齐。用户要「双色版」时走这里。
+
+**它和前面两个产物是同一套论文材料**，只是多了一份 `qa.json` 和一步渲染：
+
+```bash
+# 1. 写 qa.json（复制 assets/qa.template.json 改）
+#    ↑ 和 content.json 一样，这是判断活，脚本不替你写内容
+# 2. 出稿
+python scripts/build_qa.py qa.json -o out/答辩预测问题.html
+```
+
+`build_qa.py` **只管排版**，CSS 是照着一份真实成品逐字抄下来的（`--q:#1d4ed8` / `--a:#15803d`、`.wrap max-width:1020px`、`col.q 43%`、斑马纹），**别凭感觉改颜色或间距** —— 改一处就和 `examples/答辩预测问题.html` 对不上。`qa.json` 里写 `^{3+}` / `_{2}`，脚本转成真的 `<sup>` / `<sub>`。
+
+### 五条硬要求（照抄，别自己发挥）
+
+1. **只要「问题 + 直接答案」两栏。** 不要「考察点」「为什么问」「应答解析」「参考思路」等任何附加内容 —— 用户明确点名不要。
+2. **答案 ≤30 字**（化学式、符号、字母不计）。言简意赅，直接给结论，不铺陈。`build_qa.py` 会数汉字数，超了给警告但不阻断，自己回头删。
+3. **问题与答案不同颜色** —— 这正是用 HTML 而不是纯 txt 的原因。颜色脚本固定，不用你调。
+4. **排版整齐**：表格、对齐、上下角标用 `^{}` / `_{}`（别直接粘 Unicode 上下标，换环境会散）。
+5. **提问方向必须覆盖这三类**：① 为什么选这个体系（基质、掺杂离子、合成路线为什么这么定）② 国内外这个方向哪里做得多（点名课题组/地区，别泛泛说「研究很多」）③ 能否换成别的材料、替换后性质怎么变（引申出对比）。
+
+### 内容从哪来
+
+通读 `paper.json` 的正文和图注，尤其是：合成步骤里不能省的那一步、表格里投料与实测对不上的数、每张主图反常的地方（能级线为什么水平、峰位为什么不随温度动、XRD 重合为什么还要做 XAS、效率与功率是不是同一电流测的）。**数字、条件、单位一个字都不能想当然**，和写 `content.json` 同一条底线。
+
+⚠️ **只出 HTML，不另出纯文本 txt**（用户要的「就最后那个双色版」）。样例见 `examples/答辩预测问题.html`（双击即可在浏览器预览）、`examples/答辩预测问题.png`（截图）、`examples/qa.json`（可改的源数据）。
+
+---
+
 ## 文件
 
 ```
@@ -193,7 +224,8 @@ references/copywriting.md       文案口径：什么话能说、什么话不能
 assets/template.pptx            空模板（母版+13个版式，无页面）
 assets/logo.png                 校徽（默认南阳师范学院，自用须换）
 assets/content.template.json    content.json 全字段样板
-examples/                       成品截图 10 张 + 可直接改的 示例.pptx / 示例讲稿.docx（人名 XX）
+assets/qa.template.json          qa.json 字段样板（答辩预测问答）
+examples/                       成品示例：PPT / 讲稿截图 + 源文件 + 双色问答 HTML 与预览图
 package.json / cordis.patch.yml / lib/index.js   DSH 插件市场用：宿主侧注册本 skill，不碰出稿脚本
 scripts/lr_common.py            设计常量 + 排版原语（改参数改这里）
 scripts/extract_paper.py        抽文本与图注
@@ -201,6 +233,7 @@ scripts/crop_figures.py         裁图
 scripts/build_deck.py           生成 PPT
 scripts/check_deck.py           自检
 scripts/build_script.py         生成 Word 讲稿
+scripts/build_qa.py             生成双色答辩预测问答 HTML
 ```
 
 ---
