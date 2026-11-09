@@ -6,7 +6,7 @@ description: Turn one journal paper PDF into three deliverables by default — a
 description_zh: 把一篇期刊论文默认做成三份产物：组会文献汇报 PPT（南阳师院物电学院模板）、配套 Word 讲稿、双色答辩预测问答 HTML。用户提到文献汇报、组会汇报、journal club、把这篇 PDF 做成 PPT 时使用 —— 走这里就是三份一起出。
 description_en: Build a group-meeting literature report deck, a speaker script, and a two-colour defence-prediction Q&A HTML from one journal PDF — three deliverables by default.
 category: writing
-version: 1.5.1
+version: 1.5.2
 ---
 
 # 文献汇报 PPT
@@ -121,9 +121,12 @@ for f in FIGURES:
 python scripts/build_deck.py content.json -o out/deck.pptx
 python scripts/check_deck.py out/deck.pptx --content content.json
 python scripts/build_script.py content.json -o out/讲稿.docx
+python scripts/build_qa.py qa.json -o out/答辩预测问题.html
 ```
 
 `check_deck.py` 必须**通过、0 个建议**才算完成。它查六类：出界、重叠、空图注、字体缺失、字号越级、缺图。
+
+**四条命令一轮跑完，三份产物一起交**（PPT、讲稿、问答 HTML），少一份不算完 —— 别只交前两份就收工，也别等用户再单独点名「要那个双色版」。
 
 ⚠️ **渲染验证不能省。** 脚本说没问题不等于看起来没问题。用 LibreOffice Kit 渲出来逐页看：
 

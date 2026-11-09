@@ -1,6 +1,6 @@
 {
   "name": "lit-report-ppt",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "DeepSeek Harness skill that turns one journal paper PDF into three deliverables by default: a Chinese group-meeting literature report deck (.pptx), a matching Word speaker script, and a two-colour defence-prediction Q&A HTML (ten-odd questions with short direct answers), keeping the paper's own cropped figures and full captions.",
   "type": "module",
   "main": "lib/index.js",
